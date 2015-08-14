@@ -22,77 +22,6 @@ $coms = fetch($query_com);
         <title>The Wall</title>
         <link rel="stylesheet" href="css/style.css">
     </head>
-    <style type="text/css">
-    	body{
-    		width: 970px;
-    		margin: 0 auto;
-    		font-family: Arial;
-    		background-color: lightgrey;
-    	}
-      .header {
-        width: 660px;
-        height: 0px;
-        font-size: 25px;
-        margin-top: 10px;
-        font-weight: bold;
-        display: inline-block;
-      }
-      .profile {
-        padding-top: 10px;
-        width: 120px;
-        margin-right: 20px;
-        font-size: 16;
-        font-weight: bold;
-        display: inline-block;
-      }
-      .log_out {
-        width: 100px;
-        padding-top: 10px;
-        display: inline-block;
-      }
-      .message {
-        width: 800px;
-        height: 110px;
-        border: 2px solid black;
-      }
-      .name_date {
-        font-weight: bold;
-        font-size: 18px;
-      }
-      .msg {
-        margin-left: 30px;
-        margin-top: 5px;
-        margin-bottom: 10px;
-        width: 750px;
-        word-wrap: break-word;
-      }
-      .head_break {
-        margin-top: 10px;
-        height: 2px;
-        background-color: black;
-      }
-      .break {
-        height: 2px;
-        width: 800px;
-        margin-bottom: 20px;
-        background-color: grey;
-      }
-      .comment {
-        width: 750px;
-        height: 40px;
-        border: 1px solid black;
-      }
-      .comment_title{
-        font-size: 15px;
-        margin-left: 30px;
-        font-weight: bold;
-      }
-      .comment_text {
-        font-size: 14px;
-        margin-left: 30px;
-        word-wrap: break-word;
-      }
-    </style>
     <body>
       <div class="header">The Message Wall</div>
       <div class="profile">Hi~ <?= $_SESSION['user_name'] ?></div>
@@ -102,7 +31,7 @@ $coms = fetch($query_com);
        	</form>
       </div>
       <div class="head_break"></div>
-      <br><br>
+      <br>
       <h2>Post a message</h2>
       <form action="process.php" method="post">
         <textarea class="message" name="message"></textarea>
