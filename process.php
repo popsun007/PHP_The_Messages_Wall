@@ -1,0 +1,131 @@
+<?php 
+session_start();
+require_once("connection.php");
+//-------------------------user register and login-----------------------//
+if (isset($_POST['action']) && ($_POST['action'] == "register")){
+	register($_POST);
+}
+if (isset($_POST['action']) && ($_POST['action'] == "log_in")){
+	login($_POST);
+}
+if (isset($_POST['log_out']) && ($_POST['log_out'] == "Log Out!")){
+	session_destroy();
+	header("location: index.php");
+}
+if (isset($_SESSION['errors'])){
+	unset($_SESSION['log_in']);
+
+	header("location: index.php");
+	die();
+}
+//----------------------------------end register and login------------------------------//
+
+//-----------------------------begin wall post and comment page-------------------------//
+if (isset($_POST['action']) && ($_POST['action'] == "message")){
+	post_message($_POST);
+
+}
+if (isset($_POST['action']) && ($_POST['action']) == "comment"){
+	comment($_POST);
+
+}
+if (isset($_SESSION['main_errors'])){
+	header("location: main.php");
+}
+
+
+
+
+
+//===========================below all methods===========================//
+function has_number($str){
+	for($i=0; $i<strlen($str); $i++){
+		if(is_numeric($str[$i])){
+			return true;
+		}
+	}
+	return false;
+}
+
+function register($post){
+	//------------begin validation----------------//
+	if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)){
+		$_SESSION['errors'][] = "Email format is NOT validate!";
+	}
+	if (empty($_POST['first_name']) || has_number($_POST['first_name'])){
+		$_SESSION['errors'][] = "First name must be no number and not empty.";
+	}
+	if (empty($_POST['last_name']) || has_number($_POST['last_name'])){
+		$_SESSION['errors'][] = "Last name must be no number and not empty.";
+	}
+	if (empty($_POST['password']) || ($_POST['password'] != $_POST['com_password'])){
+		$_SESSION['errors'][] = "Password can not be empty and remain same password.";
+	}
+
+	//-------------end validation-------------------//
+	
+	//--------------communicate with Database------------//
+	$query = "INSERT INTO users (email, first_name, last_name, password) 
+			VALUES ('{$_POST['email']}','{$_POST['first_name']}','{$_POST['last_name']}','{$_POST['password']}');";
+	run_mysql_query($query);
+	$_SESSION['log_in'] = true;
+	header("location: index.php");
+}
+
+function login($post) {
+	if (empty($_POST['log_email'])||empty($_POST['log_password'])){
+		$_SESSION['errors'][] = "User name or password can not be empty!";
+	}
+	$query = "SELECT id, CONCAT(first_name, ' ', last_name) AS name FROM users 
+			WHERE email = '{$_POST['log_email']}' AND password = '{$_POST['log_password']}';" ;
+	$infos = fetch($query);
+	if($infos){
+		$_SESSION['user_id'] = $infos[0]['id'];
+		$_SESSION['user_name'] = $infos[0]['name'];
+		header("location: main.php"); 
+	}
+	else{
+		$_SESSION['errors'][] = "User name and password don't match!";
+	}
+}
+
+function post_message($post) {
+	if (empty($_POST['message'])){
+		$_SESSION['main_errors'][] = "You can NOT post blank message!";
+	}
+	else{
+		$query = "INSERT INTO messages (message, created_at, updated_at, user_id)
+				 VALUES('{$_POST['message']}', now(), now(), '{$_SESSION['user_id']}');";
+		run_mysql_query($query);
+	}
+	header("location: main.php");
+	
+}
+function comment($post) {
+	if (empty($_POST['comment'])){
+		$_SESSION['main_errors'][] = "You can NOT comment blank message!";
+	}
+	else{
+		$query = "INSERT INTO comments (comment, created_at, updated_at, messages_id, user_id) 
+				VALUES('{$_POST['comment']}',now(), now(), '{$_POST['msg_id']}', '{$_SESSION['user_id']}');";
+		run_mysql_query($query);
+	}
+	header("location: main.php");
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+?>
