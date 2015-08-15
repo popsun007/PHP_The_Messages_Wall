@@ -70,19 +70,28 @@ function register($post){
 	//-------------end validation-------------------//
 	
 	//--------------communicate with Database------------//
+
+	global $connection;
+	$esc_email = mysqli_real_escape_string($connection, $_POST['email']);
+	$esc_first_name = mysqli_real_escape_string($connection, $_POST['first_name']);
+	$esc_last_name = mysqli_real_escape_string($connection, $_POST['last_name']);
+	$esc_password = mysqli_real_escape_string($connection, $_POST['password']);
 	$query = "INSERT INTO users (email, first_name, last_name, password) 
-			VALUES ('{$_POST['email']}','{$_POST['first_name']}','{$_POST['last_name']}','{$_POST['password']}');";
+			VALUES ('{$esc_email}','{$esc_first_name}','{$esc_last_name}','{$esc_password}');";
 	run_mysql_query($query);
 	$_SESSION['log_in'] = true;
 	header("location: index.php");
 }
 
 function login($post) {
+	global $connection;
+	$esc_log_email = mysqli_real_escape_string($connection, $_POST['log_email']);
+	$esc_log_password = mysqli_real_escape_string($connection, $_POST['log_password']);
 	if (empty($_POST['log_email'])||empty($_POST['log_password'])){
 		$_SESSION['errors'][] = "User name or password can not be empty!";
 	}
 	$query = "SELECT id, CONCAT(first_name, ' ', last_name) AS name FROM users 
-			WHERE email = '{$_POST['log_email']}' AND password = '{$_POST['log_password']}';" ;
+			WHERE email = '{$esc_log_email}' AND password = '{$esc_log_password}';" ;
 	$infos = fetch($query);
 	if($infos){
 		$_SESSION['user_id'] = $infos[0]['id'];
@@ -95,24 +104,28 @@ function login($post) {
 }
 
 function post_message($post) {
+	global $connection;
+	$esc_message = mysqli_real_escape_string($connection, $_POST['message']);
 	if (empty($_POST['message'])){
 		$_SESSION['main_errors'][] = "You can NOT post blank message!";
 	}
 	else{
 		$query = "INSERT INTO messages (message, created_at, updated_at, user_id)
-				 VALUES('{$_POST['message']}', now(), now(), '{$_SESSION['user_id']}');";
+				 VALUES('{$esc_message}', now(), now(), '{$_SESSION['user_id']}');";
 		run_mysql_query($query);
 	}
 	header("location: main.php");
 	
 }
 function comment($post) {
+	global $connection;
+	$esc_comment = mysqli_real_escape_string($connection, $_POST['comment']);
 	if (empty($_POST['comment'])){
 		$_SESSION['main_errors'][] = "You can NOT comment blank message!";
 	}
 	else{
 		$query = "INSERT INTO comments (comment, created_at, updated_at, messages_id, user_id) 
-				VALUES('{$_POST['comment']}',now(), now(), '{$_POST['msg_id']}', '{$_SESSION['user_id']}');";
+				VALUES('{$esc_comment}',now(), now(), '{$_POST['msg_id']}', '{$_SESSION['user_id']}');";
 		run_mysql_query($query);
 	}
 	header("location: main.php");

@@ -20,9 +20,9 @@ $coms = fetch($query_com);
 date_default_timezone_set('America/Los_Angeles');
 function different_time($date){
   $create_date = new DateTime($date);
-            $strip = $create_date -> format('YmdHis'); //strip the update time to same format
-            $time_now = date("YmdHis"); //get time for right now
-           return $diff = $time_now - $strip;//check time differece between now and the post time;
+  $strip = $create_date -> format('YmdHis'); //strip the update time to same format
+  $time_now = date("YmdHis"); //get time for right now
+  return $diff = $time_now - $strip;//check time differece between now and the post time;
 }
 
  ?>
