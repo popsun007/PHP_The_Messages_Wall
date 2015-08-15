@@ -27,7 +27,12 @@ if (isset($_POST['action']) && ($_POST['action'] == "message")){
 }
 if (isset($_POST['action']) && ($_POST['action']) == "comment"){
 	comment($_POST);
-
+}
+if (isset($_POST['action']) && ($_POST['action']) == "delete_post"){
+	delete_post($_POST);
+}
+if (isset($_POST['action']) && ($_POST['action'] == "delete_comment")){
+	delete_comment($_POST);
 }
 if (isset($_SESSION['main_errors'])){
 	header("location: main.php");
@@ -113,10 +118,22 @@ function comment($post) {
 	header("location: main.php");
 }
 
+function delete_post($post) {
+	$query = "DELETE FROM comments
+			WHERE messages_id = " . $_POST['del_post_id'];
+	run_mysql_query($query);
+	$query = "DELETE FROM messages 
+			WHERE id = " . $_POST['del_post_id'];
+	run_mysql_query($query);
+	header("location: main.php");
+}
 
-
-
-
+function delete_comment($post) {
+	$query = "DELETE FROM comments
+			WHERE id = " . $_POST['del_com_id'];
+	run_mysql_query($query);
+	header("location: main.php");
+}
 
 
 

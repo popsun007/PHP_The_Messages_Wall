@@ -6,7 +6,7 @@ body{
 	background-color: lightgrey;
 }
 .header {
-  width: 660px;
+  width: 550px;
   height: 0px;
   font-size: 25px;
   margin-top: 10px;
@@ -15,15 +15,16 @@ body{
 }
 .profile {
   padding-top: 10px;
-  width: 120px;
+  width: 220px;
   margin-right: 20px;
-  font-size: 16;
+  font-size: 16px;
   font-weight: bold;
   display: inline-block;
 }
 .log_out {
   width: 100px;
-  padding-top: 10px;
+  padding-top: 16px;
+  vertical-align: top;
   display: inline-block;
 }
   .message {
@@ -32,8 +33,15 @@ body{
     border: 2px solid black;
   }
   .name_date {
+    width: 350px;
     font-weight: bold;
     font-size: 18px;
+    display: inline-block;
+  }
+  .delete_post, .delete_comment {
+    width: 55px;
+    vertical-align: top;
+    display: inline-block;
   }
   .msg {
     margin-left: 30px;
@@ -53,18 +61,26 @@ body{
   margin-bottom: 20px;
   background-color: grey;
 }
-  .comment {
+.comment {
+  margin-left: 20px;
+}
+  .com_textarea {
     width: 750px;
     height: 40px;
     border: 1px solid black;
   }
   .comment_title{
-    font-size: 15px;
+    width: 320px;
+    font-size: 14px;
     margin-left: 30px;
     font-weight: bold;
+    display: inline-block;
   }
   .comment_text {
-    font-size: 14px;
+    font-size: 12px;
     margin-left: 30px;
     word-wrap: break-word;
   }
+    .button_red {
+      color: red;
+    }

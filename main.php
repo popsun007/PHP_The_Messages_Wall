@@ -1,12 +1,12 @@
 <?php 
 session_start();
 require_once("connection.php");
-$query = "SELECT CONCAT(users.first_name, ' ', users.last_name) AS name, message, messages.id AS msg_id, messages.updated_at FROM messages
+$query = "SELECT CONCAT(users.first_name, ' ', users.last_name) AS name, message, messages.id AS msg_id, user_id, messages.updated_at FROM messages
           JOIN users
           ON users.id = messages.user_id
           ORDER BY updated_at DESC";
 $msgs = fetch($query);
-$query_com = "SELECT CONCAT(users.first_name, ' ', users.last_name) AS name, comments.messages_id, comment, comments.updated_at FROM messages
+$query_com = "SELECT CONCAT(users.first_name, ' ', users.last_name) AS name, comments.messages_id, comments.id, comments.user_id, comment, comments.updated_at FROM messages
               JOIN comments
               ON messages.id = comments.messages_id
               JOIN users
@@ -55,37 +55,67 @@ $coms = fetch($query_com);
           $_SESSION['msg_id'] = $msg['msg_id'];
  ?>
           <div>
-            <span class="name_date"><?= $msg['name']."----" . $msg['updated_at'] ?>  </span>
+            <div class="name_date"><?= $msg['name']."----" . $msg['updated_at'] ?></div>
+<?php
+            if($msg['user_id']==$_SESSION['user_id']){
+ ?>
+            <div class="delete_post">
+              <form action="process.php" method="post">
+                <input type="hidden" name="action" value="delete_post">
+                <input type="hidden" name="del_post_id" value= <?= $_SESSION['msg_id'] ?>>
+                <input type="submit" class="button_red" value="remove">
+              </form>
+            </div>
+<?php 
+            }
+?>
             <div class="msg">
                <?= $msg['message']; ?>
+            </div>
   <?php 
             foreach($coms as $com) {
               if ($_SESSION['msg_id'] ==$com['messages_id']){
   ?>
+  <div class="comment">
               <div class="comment_title">
                 <?=  $com['name'] . "-----" . $com['updated_at']; ?>
               </div>
+<?php 
+              if($_SESSION['user_id'] == $com['user_id']){
+?>
+              <div class="delete_comment">
+                <form action="process.php" method="post">
+                  <input type="hidden" name="action" value="delete_comment">
+                  <input type="hidden" name="del_com_id" value= <?= $com['id'] ?>>
+                  <input type="submit" class="button_red" value="remove">
+                </form>
+              </div>
+<?php 
+                }
+?>
               <div class="comment_text">
                 <?=  $com['comment']; ?>
               </div>
+    </div>
   <?php
               }
             }
 
    ?>
             <form action="process.php" method="post">
-              <textarea class="comment" name="comment"; ?></textarea>
+              <textarea class="com_textarea" name="comment"; ?></textarea>
               <input type="hidden" name="action" value="comment">
               <input type="hidden" name="msg_id" value= <?= $_SESSION['msg_id'] ?>>
               <br>
               <input type="submit" value="Post a comment">
             </form>
-          </div>
+            <br>
             <div class="break"></div>
           </div>
 <?php 
       }
  ?>
+      <center><h3>Welcome to The Wall</h3></center>
     </body>
 </html>
 
